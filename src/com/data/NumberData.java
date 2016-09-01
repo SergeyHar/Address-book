@@ -2,7 +2,7 @@ package com.data;
 
 import java.util.List;
 
-import com.User;
+import com.model.User;
 
 public class NumberData implements Data {
 

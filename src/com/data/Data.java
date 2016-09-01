@@ -2,7 +2,7 @@ package com.data;
 
 import java.util.List;
 
-import com.User;
+import com.model.User;
 
 public interface Data {
 	public void fileWriter(String path, User user);

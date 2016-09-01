@@ -2,8 +2,8 @@ package com.repository;
 
 import java.util.List;
 
-import com.User;
 import com.data.UserData;
+import com.model.User;
 
 public class UserRepository implements UserRepositoryInterface {
 
@@ -31,6 +31,12 @@ public class UserRepository implements UserRepositoryInterface {
 	public List<User> getUsers(int userId) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void addFriend(int userId, int setUserId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
