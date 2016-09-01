@@ -2,7 +2,7 @@ package com.data;
 
 import java.util.List;
 
-import com.User;
+import com.controller.User;
 
 public class FriendData implements Data{
 

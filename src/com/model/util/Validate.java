@@ -1,4 +1,4 @@
-package com;
+package com.model.util;
 
 public class Validate {
 	public static String notNull(String value) {

@@ -1,4 +1,4 @@
-package com;
+package com.model.util;
 
 public class MyExeptions extends Exception {
 //	public MyExeptions() {

@@ -1,8 +1,9 @@
-package com;
+package com.controller;
 
 import java.util.List;
 
-import com.phoneNumber.Number;
+import com.model.phoneNumber.Number;
+import com.model.util.Validate;
 
 public class User {
 	private String name;

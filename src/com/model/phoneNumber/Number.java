@@ -1,4 +1,4 @@
-package com.phoneNumber;
+package com.model.phoneNumber;
 
 public class Number {
 	private PhoneType type;

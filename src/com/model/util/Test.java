@@ -1,4 +1,6 @@
-package com;
+package com.model.util;
+
+import com.controller.Controller;
 
 public class Test {
 

@@ -1,4 +1,4 @@
-package com;
+package com.controller;
 
 public interface ControllerInterface {
 	public void signIn();

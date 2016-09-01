@@ -2,7 +2,7 @@ package com.repository;
 
 import java.util.List;
 
-import com.User;
+import com.controller.User;
 import com.data.UserData;
 
 public class UserRepository implements UserRepositoryInterface {

@@ -1,7 +1,8 @@
-package com;
+package com.controller;
 
 import java.util.Scanner;
 
+import com.model.util.Validate;
 import com.repository.UserRepository;
 
 public class Controller {

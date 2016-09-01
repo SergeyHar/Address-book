@@ -1,4 +1,4 @@
-package com.phoneNumber;
+package com.model.phoneNumber;
 
 public enum PhoneType {
 	MOBILE(1), 

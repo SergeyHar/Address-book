@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import com.User;
+import com.controller.User;
 
 public class UserData implements Data {
 	private static final String COMMA_DELIMITER = ",";
