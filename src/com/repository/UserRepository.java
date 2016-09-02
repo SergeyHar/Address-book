@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.data.UserData;
 import com.model.User;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 
 public class UserRepository implements UserRepositoryInterface {
 
 	@Override
-	public void addUser(User user) {
+	public void addUser(User user)throws InvalidArgumentException {
 
 		UserData data = new UserData();
 		String path = "";
@@ -16,27 +17,32 @@ public class UserRepository implements UserRepositoryInterface {
 	}
 
 	@Override
-	public User editUser(User user) {
+	public User editUser(User user) throws InvalidArgumentException{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void delateUser(int userId) {
+	public void delateUser(int userId) throws InvalidArgumentException{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public List<User> getUsers(int userId) {
+	public List<User> getUsers(int userId) throws InvalidArgumentException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void addFriend(int userId, int setUserId) {
+	public void addFriend(int userId, int setUserId)throws InvalidArgumentException {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public List<User> getFriends(int userId) throws InvalidArgumentException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

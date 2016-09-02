@@ -5,10 +5,14 @@ import java.util.Scanner;
 import com.model.User;
 import com.model.util.Validate;
 import com.repository.UserRepository;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 
 public class Controller {
 	Scanner scanner = new Scanner(System.in);
 	String commandLine;
+
+	UserRepository repository = new UserRepository();
+
 
 	public String inputCommand() {
 		commandLine = scanner.nextLine();
@@ -51,8 +55,12 @@ public class Controller {
 
 		User user = new User(name, pass);
 
-		UserRepository repository = new UserRepository();
-		repository.addUser(user);
+		try {
+			repository.addUser(user);
+		} catch (InvalidArgumentException e) {
+			System.out.println("esim");
+			e.printStackTrace();
+		}
 		System.out.println("Deare " + user.getName());
 		System.out.println(
 				"You have successfully created user. Please write down one of this commands \"Sign In\" or \"Sign Up\"");

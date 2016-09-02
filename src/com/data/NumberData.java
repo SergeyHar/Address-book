@@ -14,9 +14,9 @@ public class NumberData implements Data {
 
 	@Override
 	public List<Object> fileReader(String path) {
-		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 	
 }
