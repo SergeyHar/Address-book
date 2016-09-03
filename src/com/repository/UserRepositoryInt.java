@@ -18,6 +18,7 @@ public interface UserRepositoryInt {
     User addFriend(int userId, int setUserId) throws InvalidArgumentException;
 
     List<User> getFriends(int userId) throws InvalidArgumentException;
+    void deleteFriend(int friendId) throws InvalidArgumentException;
 
     User checkUser(User user) throws InvalidArgumentException, MyExceptions;
 

@@ -28,6 +28,7 @@ public class Test {
 		System.out.println("Please write down one of this commands \"Sign In\" or \"Sign Up\"");
 		c.inputValue();
 
-    }
+
+	}
 
 }

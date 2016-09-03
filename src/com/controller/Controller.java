@@ -51,17 +51,23 @@ public class Controller {
                 break;
             case "Show Tel. Numbers":
                 showTel();
-                System.out.println("\"Show Tel. Numbers\"");
+                System.out.println("Please write new command");
                 inputValue();
                 break;
 
             case "Add Friend":
                 addFriend();
+                System.out.println("Please write new command");
+                inputValue();
+                break;
+            case "Show Friend":
+                showFriends();
+                System.out.println("Please write new command");
                 inputValue();
                 break;
             case "Delete Friend":
                 deleteFriend();
-                System.out.println("\"Delete Friend\"");
+                System.out.println("Please write new command");
                 inputValue();
                 break;
             case "Help":
@@ -77,28 +83,54 @@ public class Controller {
         }
     }
 
+    private void showFriends() {
+
+
+        try {
+            System.out.println("Friends  ");
+            for (User user : repository.getFriends(Util.loginUser.getId())) {
+                System.out.printf(", " + user.getName());
+            }
+
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void deleteFriend() {
+        System.out.println("Write friend name if you wont delete");
+        String deleteFriend = inputCommand();
+        int deleteFriendId=0;
+        try {
+            repository.deleteFriend(deleteFriendId);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void addFriend() {
         String friendName;
         System.out.println("Please provide your friend username");
-        friendName =inputCommand();
+        friendName = inputCommand();
         User user = null;
-        boolean flag=false;
+        boolean flag = false;
         try {
-            for (User user1:repository.getUsers(Util.loginUser.getId())) {
-                if (user1.getName().equals(friendName)){
-                    user=user1;
-                    flag=true;
+            for (User user1 : repository.getUsers(Util.loginUser.getId())) {
+                if (user1.getName().equals(friendName)) {
+                    System.out.println(user1.getName() + "  " + user1.getId());
+                    user = user1;
+                    flag = true;
                 }
             }
-            if(flag){
+            if (flag) {
                 repository.addFriend(Util.loginUser.getId(), user.getId());
-                System.out.println("Thank you. Now "+friendName+" can has access to your address book");
-            }
-            else {
-                throw  new MyExceptions("Please correct your friend name");
+                System.out.println(Util.loginUser.getId());
+                System.out.println(user.getName() + " " + user.getId());
+                System.out.println("Thank you. Now " + friendName + " can has access to your address book");
+            } else {
+                throw new MyExceptions("Please correct your friend name");
             }
 
         } catch (InvalidArgumentException e) {
@@ -113,12 +145,13 @@ public class Controller {
 
     private void showTel() {
         try {
-            phoneNumberReposytory.showNumbers(Util.loginUser.getId());
-            for (PhoneNumber phoneNumber : phoneNumberReposytory.showNumbers(Util.loginUser.getId())                    ) {
-                System.out.println(phoneNumber.toString());
-
+            for (PhoneNumber phoneNumber : phoneNumberReposytory.showNumbers(Util.loginUser.getId())) {
+                for (User friend : repository.getFriends(Util.loginUser.getId())) {
+                    if (phoneNumber.getUserId() == Util.loginUser.getId() || friend.getId() == phoneNumber.getUserId()) {
+                        System.out.println(phoneNumber.toString());
+                    }
+                }
             }
-
         } catch (InvalidArgumentException e) {
             e.printStackTrace();
         }

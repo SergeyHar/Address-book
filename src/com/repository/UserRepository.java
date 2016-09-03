@@ -8,8 +8,9 @@ import com.model.util.MyExceptions;
 import com.model.util.Util;
 import com.sun.javaws.exceptions.InvalidArgumentException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserRepository implements UserRepositoryInt {
     Data data = new UserData();
@@ -31,7 +32,6 @@ public class UserRepository implements UserRepositoryInt {
 
     @Override
     public void deleteUser(int userId) throws InvalidArgumentException {
-        // TODO Auto-generated method stub
 
     }
 
@@ -39,7 +39,11 @@ public class UserRepository implements UserRepositoryInt {
     public List<User> getUsers(int userId) throws InvalidArgumentException {
         Data data = new UserData();
         List<Object> objects = data.fileReader(Util.projectDirectory());
-        List<User> users = objects.stream().map(user -> (User) user).collect(Collectors.toList());
+//        List<User> users = objects.stream().map(user -> (User) user).collect(Collectors.toList());
+        List<User> users = new ArrayList<>();
+        for (Object o : objects) {
+            users.add((User) o);
+        }
 
         return users;
     }
@@ -50,7 +54,7 @@ public class UserRepository implements UserRepositoryInt {
         User user = null;
         boolean flag = false;
         for (User us : getUsers(userId)) {
-            if (userId == us.getId()) {
+            if (setUserId == us.getId()) {
                 user = us;
                 flag = true;
             }
@@ -64,10 +68,35 @@ public class UserRepository implements UserRepositoryInt {
 
     @Override
     public List<User> getFriends(int userId) throws InvalidArgumentException {
-        // TODO Auto-generated method stub
-        return null;
+        List<Object> objects = dataFriend.fileReader(Util.projectDirectory());
+        List<HashMap<Integer, Integer>> friendsMap = new ArrayList<>();
+        List<User> users = new ArrayList<>();
+        List<User> usersList = getUsers(Util.loginUser.getId());
+        List<Integer> friendsId = new ArrayList<>();
+        for (Object o : objects) {
+//            System.out.println(o.toString());
+
+            HashMap<Integer, Integer> checkFriend = (HashMap<Integer, Integer>) o;
+            if (checkFriend.get(userId) != null) {
+                for (User user : usersList) {
+                    if (user.getId() == ((HashMap<Integer, Integer>) o).get(userId)) {
+                        users.add(user);
+                    }
+                }
+                friendsId.add(((HashMap<Integer, Integer>) o).get(userId));
+            }
+        }
+
+        return users;
     }
 
+    @Override
+    public void deleteFriend(int friendId) throws InvalidArgumentException {
+        getFriends(Util.loginUser.getId());
+
+
+
+    }
     @Override
     public User checkUser(User user) throws InvalidArgumentException, MyExceptions {
         List<Object> objects = data.fileReader(Util.projectDirectory());
