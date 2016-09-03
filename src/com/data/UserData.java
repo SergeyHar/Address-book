@@ -1,15 +1,10 @@
 package com.data;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.model.User;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.model.User;
-import com.model.util.Util;
 
 public class UserData implements Data {
     private static final String COMMA_DELIMITER = ",";
@@ -18,27 +13,24 @@ public class UserData implements Data {
     private static final String FILE_HEADER = "id,name,password";
 
     @Override
-    public void fileWriter(String path, User user) {
+    public void fileWriter(String path, Object o) {
 
         FileWriter fileWriter = null;
         BufferedReader fileReader = null;
 
         try {
-            fileWriter = new FileWriter(path, true);
-            fileReader = new BufferedReader(new FileReader(path));
+            fileWriter = new FileWriter(path+"user.csv", true);
+            fileReader = new BufferedReader(new FileReader(path+"user.csv"));
 
             if (fileReader.readLine() == null) {
                 fileWriter.append(FILE_HEADER.toString());
                 fileWriter.append(NEW_LINE_SEPARATOR.toString());
             }
-//			Util.reset_counter(0);
-            // append Uesr
-//			if()
-            fileWriter.append(String.valueOf(user.getId()));
+            fileWriter.append(String.valueOf(((User)o).getId()));
             fileWriter.append(COMMA_DELIMITER.toString());
-            fileWriter.append(String.valueOf(user.getName()));
+            fileWriter.append(String.valueOf(((User)o).getName()));
             fileWriter.append(COMMA_DELIMITER.toString());
-            fileWriter.append(String.valueOf(user.getPassword()));
+            fileWriter.append(String.valueOf(((User)o).getPassword()));
 
             fileWriter.append(NEW_LINE_SEPARATOR.toString());
 
@@ -65,6 +57,7 @@ public class UserData implements Data {
     public List<Object> fileReader(String path) {
 
         BufferedReader fileReader = null;
+        List<Object> result = null;
 
         try {
             final int USER_ID_IDX = 0;
@@ -75,7 +68,7 @@ public class UserData implements Data {
 
             String line = "";
             // Create the file reader
-            fileReader = new BufferedReader(new FileReader(path));
+            fileReader = new BufferedReader(new FileReader(path+"user.csv"));
 
             // Read the CSV file header to skip it
             fileReader.readLine();
@@ -85,18 +78,14 @@ public class UserData implements Data {
                 String[] tokens = line.split(COMMA_DELIMITER);
 
                 if (tokens.length > 0) {
-                    User user = new User();
+                    User user = new User(tokens[USER_PASSWORD_IDX]);
                     user.setId(Integer.parseInt(tokens[USER_ID_IDX]));
                     user.setName(tokens[USER_NAME_IDX]);
-                    user.setPassword(tokens[USER_PASSWORD_IDX]);
                     users.add(user);
                 }
 
             }
-//			for (Object user :  users) {
-//				System.out.println(user.toString());
-//			}
-            return users;
+            result = users;
 
         } catch (FileNotFoundException e) {
             System.out.println("Error in CsvFileReader !!!");
@@ -105,7 +94,7 @@ public class UserData implements Data {
             System.out.println("Error while closing fileReader !!!");
             e.printStackTrace();
         }
-        return null;
+        return result;
 
     }
 

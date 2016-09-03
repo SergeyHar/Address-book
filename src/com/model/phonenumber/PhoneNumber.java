@@ -2,7 +2,7 @@ package com.model.phonenumber;
 
 import com.model.util.Util;
 
-public class Number {
+public class PhoneNumber {
     private int id;
     private int userId;
     private PhoneType type;
@@ -18,6 +18,10 @@ public class Number {
 
     public int getUserId() {
         return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public PhoneType getType() {
@@ -36,14 +40,23 @@ public class Number {
         this.number = number;
     }
 
-    public Number() {
+    public PhoneNumber() {
     }
 
-    public Number(int userId, PhoneType type, int number) {
+    public PhoneNumber(int userId, PhoneType type, int number) {
         this.id = ++Util.next_id;
         this.userId = userId;
         this.type = type;
         this.number = number;
     }
 
+    @Override
+    public String toString() {
+        return "PhoneNumber{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", type=" + type +
+                ", number=" + number +
+                '}';
+    }
 }

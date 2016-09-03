@@ -1,16 +1,16 @@
 package com.model;
 
-import java.util.List;
-
-import com.model.phonenumber.Number;
+import com.model.phonenumber.PhoneNumber;
 import com.model.util.Util;
 import com.model.util.Validate;
+
+import java.util.List;
 
 public class User {
     private String name;
     private String password;
     private int id = 0;
-    private List<Number> phoneNumber;
+    private List<PhoneNumber> phonePhoneNumber;
     private List<User> friend;
 
     public String getName() {
@@ -38,12 +38,12 @@ public class User {
     }
 
 
-    public List<Number> getPhoneNumber() {
-        return phoneNumber;
+    public List<PhoneNumber> getPhonePhoneNumber() {
+        return phonePhoneNumber;
     }
 
-    public void setPhoneNumber(List<Number> phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhonePhoneNumber(List<PhoneNumber> phonePhoneNumber) {
+        this.phonePhoneNumber = phonePhoneNumber;
     }
 
     public List<User> getFriend() {
@@ -56,6 +56,10 @@ public class User {
 
     public User() {
 
+    }
+
+    public User(String noMd5Password) {
+        this.password = noMd5Password;
     }
 
     public User(String name, String password) {
@@ -74,7 +78,7 @@ public class User {
         result = prime * result + id;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
-        result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+        result = prime * result + ((phonePhoneNumber == null) ? 0 : phonePhoneNumber.hashCode());
         return result;
     }
 
@@ -104,10 +108,10 @@ public class User {
                 return false;
         } else if (!password.equals(other.password))
             return false;
-        if (phoneNumber == null) {
-            if (other.phoneNumber != null)
+        if (phonePhoneNumber == null) {
+            if (other.phonePhoneNumber != null)
                 return false;
-        } else if (!phoneNumber.equals(other.phoneNumber))
+        } else if (!phonePhoneNumber.equals(other.phonePhoneNumber))
             return false;
         return true;
     }

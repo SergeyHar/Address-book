@@ -2,7 +2,8 @@ package com.model.phonenumber;
 
 public enum PhoneType {
 	MOBILE(1), 
-	Home(2);
+	HOME(2),
+	WORK(3)	;
 	int id;
 
 	PhoneType(int id) {
