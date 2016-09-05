@@ -4,8 +4,8 @@ public class Validate {
     public static String notNull(String value) {
         if (value == null || value.equals("")) {
             try {
-                throw new MyExceptions("Input value can't be empty");
-            } catch (MyExceptions e) {
+                throw new InvalidArgumentException("Input value can't be empty");
+            } catch (InvalidArgumentException e) {
                 System.out.println(e);
 //                e.printStackTrace();
             }

@@ -44,7 +44,7 @@ public class PhoneNumber {
     }
 
     public PhoneNumber(int userId, PhoneType type, int number) {
-        this.id = ++Util.next_id;
+        this.id = ++Util.phoneNumberNextId;
         this.userId = userId;
         this.type = type;
         this.number = number;

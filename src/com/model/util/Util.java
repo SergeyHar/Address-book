@@ -7,22 +7,29 @@ import java.io.File;
 
 public class Util {
     public static User loginUser = null;
-    public static final String PATH = "";
-    public static int next_id = 0;
+    public static String path = "";
+    public static int userNextId = 0;
+    public static int phoneNumberNextId = 0;
 
 
     public static String projectDirectory() {
-        File file = new File(PATH);
-        if (!file.mkdir()) {
-            file.mkdirs();
-        }
-        return PATH;
+        File file = new File(path);
+        file.mkdirs();
+        return path;
     }
 
-    public static void reset_counter(int n) // use with care!
-    {
-        Util.next_id = n;
+    public static void printMessage(String message) {
+        System.out.println(message);
     }
+
+    public static void printMessage(InvalidArgumentException invArgExcepMessage) {
+        System.out.println(invArgExcepMessage);
+    }
+
+//    public static void reset_counter(int n) // use with care!
+//    {
+//        Util.next_id = n;
+//    }
 
     public static PhoneType checkType(int type) {
         PhoneType result;
@@ -40,6 +47,7 @@ public class Util {
 
         return result;
     }
+
 
 
 }

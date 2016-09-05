@@ -11,8 +11,8 @@ import java.util.List;
 public class FriendData implements Data {
     private static final String COMMA_DELIMITER = ",";
     private static final String NEW_LINE_SEPARATOR = "\n";
-
     private static final String FILE_HEADER = "id,userId";
+    private static final String FILE_NAME = "/friends.csv";
 
 
     @Override
@@ -21,8 +21,8 @@ public class FriendData implements Data {
         BufferedReader fileReader = null;
 
         try {
-            fileWriter = new FileWriter(path + "friends.csv", true);
-            fileReader = new BufferedReader(new FileReader(path + "friends.csv"));
+            fileWriter = new FileWriter(path + FILE_NAME, true);
+            fileReader = new BufferedReader(new FileReader(path + FILE_NAME));
 
             if (fileReader.readLine() == null) {
                 fileWriter.append(FILE_HEADER.toString());
@@ -33,22 +33,25 @@ public class FriendData implements Data {
             fileWriter.append(String.valueOf(((User) object).getId()));
             fileWriter.append(NEW_LINE_SEPARATOR.toString());
 
-            System.out.println("CSV file was created successfully !!!");
-
         } catch (Exception e) {
-            System.out.println("Error in friendsFileWriter !!!");
-            e.printStackTrace();
+            Util.printMessage("Error in friendsFileWriter !!!");
+//            e.printStackTrace();
         } finally {
             try {
                 fileWriter.flush();
                 fileWriter.close();
 
             } catch (IOException e) {
-                System.out.println("Error while flushing/closing friendsFileWriter !!!");
-                e.printStackTrace();
+                Util.printMessage("Error while flushing/closing friendsFileWriter !!!");
+//                e.printStackTrace();
             }
         }
 
+
+    }
+
+    @Override
+    public void removeFileArgument(String path, Object object) {
 
     }
 
@@ -64,14 +67,12 @@ public class FriendData implements Data {
             final int FRIEND_ID_IDX = 1;
             List<Object> friendMapList = new ArrayList<>();
 
-
             String line = "";
             // Create the file reader
-            fileReader = new BufferedReader(new FileReader(path + "friends.csv"));
+            fileReader = new BufferedReader(new FileReader(path + FILE_NAME));
 
             // Read the CSV file header to skip it
             fileReader.readLine();
-
             while ((line = fileReader.readLine()) != null) {
 
                 String[] tokens = line.split(COMMA_DELIMITER);
@@ -85,11 +86,11 @@ public class FriendData implements Data {
             result = friendMapList;
 
         } catch (FileNotFoundException e) {
-            System.out.println("Error in CsvFileReader !!!");
-            e.printStackTrace();
+            Util.printMessage("Error in CsvFileReader !!!");
+//            e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Error while closing fileReader !!!");
-            e.printStackTrace();
+            Util.printMessage("Error while closing fileReader !!!");
+//            e.printStackTrace();
         }
         return result;
 

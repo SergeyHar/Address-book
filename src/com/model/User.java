@@ -66,7 +66,7 @@ public class User {
         super();
         this.name = name;
         this.password = Validate.md5(password);
-        this.id = ++Util.next_id;
+        this.id = ++Util.userNextId;
 
     }
 

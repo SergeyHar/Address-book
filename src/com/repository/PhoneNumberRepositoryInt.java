@@ -1,8 +1,7 @@
 package com.repository;
 
 import com.model.phonenumber.PhoneNumber;
-import com.model.phonenumber.PhoneType;
-import com.sun.javaws.exceptions.InvalidArgumentException;
+import com.model.util.InvalidArgumentException;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
  */
 public interface PhoneNumberRepositoryInt {
 
-    PhoneNumber addNumber(int userId, PhoneType type, int number)throws InvalidArgumentException;
-    List<PhoneNumber> showNumbers(int userId)throws InvalidArgumentException;
+    PhoneNumber addNumber(int userId, PhoneNumber phoneNumber)throws InvalidArgumentException, InvalidArgumentException;
+    List<PhoneNumber> getNumbers(int userId)throws InvalidArgumentException;
 
 }
