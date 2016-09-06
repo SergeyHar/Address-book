@@ -116,9 +116,6 @@ public class Controller implements ControllerInt {
     }
 
     public void signUp() {
-        Util.printMessage(Util.projectDirectory().hashCode() + "");
-        Util.printMessage("".hashCode() + "");
-
         Util.printMessage("Please provide your username:");
         String name = Validate.notNull(inputCommand());
         Util.printMessage("Please provide your password:");
@@ -144,8 +141,9 @@ public class Controller implements ControllerInt {
         name = inputCommand();
         Util.printMessage("Please write password");
         pass = inputCommand();
-
-        if (!name.equals("") && !pass.equals("")) {
+        if (name.equals("Exit") || pass.equals("Exit")) {
+            exit();
+        } else if (!name.equals("") && !pass.equals("")) {
             User user = new User();
             user.setName(name);
             user.setPassword(pass);
@@ -257,11 +255,12 @@ public class Controller implements ControllerInt {
     }
 
     public void help() {
-        Util.printMessage("\"Sign In\", \"Sign Up\", \"Edit profile\", \"Add Tel. Numb\", \"Show Tel. Numbers\", \"Add Friend\"");
+        Util.printMessage("\"Sign In\", \"Sign Up\", \"Edit profile\", \"Add Tel. Numb\", \"Show Tel. Numbers\", \"Add Friend\", \"Exit\"");
     }
 
     @Override
     public void exit() {
         Util.printMessage("Good bye");
+        System.exit(0);
     }
 }

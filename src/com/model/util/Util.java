@@ -11,7 +11,6 @@ public class Util {
     public static int userNextId = 0;
     public static int phoneNumberNextId = 0;
 
-
     public static String projectDirectory() {
         File file = new File(path);
         file.mkdirs();
@@ -25,11 +24,6 @@ public class Util {
     public static void printMessage(InvalidArgumentException invArgExcepMessage) {
         System.out.println(invArgExcepMessage);
     }
-
-//    public static void reset_counter(int n) // use with care!
-//    {
-//        Util.next_id = n;
-//    }
 
     public static PhoneType checkType(int type) {
         PhoneType result;
@@ -47,7 +41,4 @@ public class Util {
 
         return result;
     }
-
-
-
 }
