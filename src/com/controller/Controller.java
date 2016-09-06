@@ -14,19 +14,20 @@ import com.repository.UserRepositoryInt;
 import java.util.Scanner;
 
 public class Controller implements ControllerInt {
-    Scanner scanner = new Scanner(System.in);
-    String commandLine;
+    private Scanner scanner = new Scanner(System.in);
+    private String commandLine;
 
-    UserRepositoryInt repository = new UserRepository();
-    PhoneNumberRepositoryInt phoneNumberRepository = new PhoneNumberRepository();
+    private UserRepositoryInt repository = new UserRepository();
+    private PhoneNumberRepositoryInt phoneNumberRepository = new PhoneNumberRepository();
 
-
+    @Override
     public String inputCommand() {
         commandLine = scanner.nextLine();
         return commandLine;
 
     }
 
+    @Override
     public void start() {
 
         switch (inputCommand()) {
@@ -43,6 +44,11 @@ public class Controller implements ControllerInt {
             case "Sign In":
                 signIn();
                 Util.printMessage("Now you can write down one of this commands \"Add Tel. Numb\" or \"Show Tel. Numbers\"");
+                start();
+                break;
+            case "Edit profile":
+                editProfile();
+                Util.printMessage("Please write new command");
                 start();
                 break;
             case "Add Tel. Numb":
@@ -90,7 +96,29 @@ public class Controller implements ControllerInt {
         }
     }
 
+    @Override
+    public void editProfile() {
+        String name;
+        String password;
+        User user = new User();
+        Util.printMessage("Input new name");
+        name = inputCommand();
+        Util.printMessage("Input new password");
+        password = inputCommand();
+        user.setName(name);
+        user.setPassword(password);
+        try {
+            repository.editUser(user);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void signUp() {
+        Util.printMessage(Util.projectDirectory().hashCode() + "");
+        Util.printMessage("".hashCode() + "");
+
         Util.printMessage("Please provide your username:");
         String name = Validate.notNull(inputCommand());
         Util.printMessage("Please provide your password:");
@@ -101,7 +129,7 @@ public class Controller implements ControllerInt {
         try {
             repository.addUser(user);
         } catch (InvalidArgumentException e) {
-            System.out.println("esim");
+            Util.printMessage(e);
             e.printStackTrace();
         }
         Util.printMessage("Dear " + user.getName());
@@ -117,7 +145,7 @@ public class Controller implements ControllerInt {
         Util.printMessage("Please write password");
         pass = inputCommand();
 
-        if (name != "" && pass != "") {
+        if (!name.equals("") && !pass.equals("")) {
             User user = new User();
             user.setName(name);
             user.setPassword(pass);
@@ -203,7 +231,7 @@ public class Controller implements ControllerInt {
         } catch (InvalidArgumentException e) {
             Util.printMessage(e);
         } catch (NumberFormatException nE) {
-            System.out.println(nE);
+            Util.printMessage(String.valueOf(nE));
             addTel();
         }
 
@@ -229,7 +257,7 @@ public class Controller implements ControllerInt {
     }
 
     public void help() {
-        Util.printMessage("\"Sign In\", \"Sign Up\", \"Add Tel. Numb\", \"Show Tel. Numbers\", \"Add Friend\"");
+        Util.printMessage("\"Sign In\", \"Sign Up\", \"Edit profile\", \"Add Tel. Numb\", \"Show Tel. Numbers\", \"Add Friend\"");
     }
 
     @Override

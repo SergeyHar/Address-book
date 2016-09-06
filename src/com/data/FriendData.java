@@ -12,26 +12,36 @@ public class FriendData implements Data {
     private static final String COMMA_DELIMITER = ",";
     private static final String NEW_LINE_SEPARATOR = "\n";
     private static final String FILE_HEADER = "id,userId";
-    private static final String FILE_NAME = "/friends.csv";
+    private static final String FILE_NAME = "friends.csv";
+
+    private static String filePath(String path, String fileName) {
+        String result;
+        if (!path.equals("")) {
+            result = path + "/" + fileName;
+        } else {
+            result = fileName;
+        }
+        return result;
+    }
 
 
     @Override
     public void fileWriter(String path, Object object) {
         FileWriter fileWriter = null;
-        BufferedReader fileReader = null;
+        BufferedReader fileReader;
 
         try {
-            fileWriter = new FileWriter(path + FILE_NAME, true);
-            fileReader = new BufferedReader(new FileReader(path + FILE_NAME));
+            fileWriter = new FileWriter(FriendData.filePath(path, FILE_NAME), true);
+            fileReader = new BufferedReader(new FileReader(FriendData.filePath(path, FILE_NAME)));
 
             if (fileReader.readLine() == null) {
-                fileWriter.append(FILE_HEADER.toString());
-                fileWriter.append(NEW_LINE_SEPARATOR.toString());
+                fileWriter.append(FILE_HEADER);
+                fileWriter.append(NEW_LINE_SEPARATOR);
             }
             fileWriter.append(String.valueOf(Util.loginUser.getId()));
-            fileWriter.append(COMMA_DELIMITER.toString());
+            fileWriter.append(COMMA_DELIMITER);
             fileWriter.append(String.valueOf(((User) object).getId()));
-            fileWriter.append(NEW_LINE_SEPARATOR.toString());
+            fileWriter.append(NEW_LINE_SEPARATOR);
 
         } catch (Exception e) {
             Util.printMessage("Error in friendsFileWriter !!!");
@@ -58,7 +68,7 @@ public class FriendData implements Data {
     @Override
     public List<Object> fileReader(String path) {
 
-        BufferedReader fileReader = null;
+        BufferedReader fileReader ;
         List<Object> result = null;
 
         try {
@@ -67,9 +77,9 @@ public class FriendData implements Data {
             final int FRIEND_ID_IDX = 1;
             List<Object> friendMapList = new ArrayList<>();
 
-            String line = "";
+            String line;
             // Create the file reader
-            fileReader = new BufferedReader(new FileReader(path + FILE_NAME));
+            fileReader = new BufferedReader(new FileReader(FriendData.filePath(path, FILE_NAME)));
 
             // Read the CSV file header to skip it
             fileReader.readLine();
@@ -93,6 +103,17 @@ public class FriendData implements Data {
 //            e.printStackTrace();
         }
         return result;
+
+    }
+
+    @Override
+    public void clearingFile(String path) {
+        File outputFile = new File(FriendData.filePath(path, FILE_NAME));
+        try {
+            FileWriter fw = new FileWriter(outputFile, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

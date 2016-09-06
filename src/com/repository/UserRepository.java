@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class UserRepository implements UserRepositoryInt {
-    Data data = new UserData();
-    Data dataFriend = new FriendData();
+    private Data data = new UserData();
+    private Data dataFriend = new FriendData();
 
 
     @Override
@@ -23,8 +23,23 @@ public class UserRepository implements UserRepositoryInt {
 
     @Override
     public User editUser(User user) throws InvalidArgumentException {
+        List<User> newUsers = new ArrayList<>();
 
-        return null;
+        for (Object getUserValue : data.fileReader(Util.projectDirectory())) {
+            if (((User) getUserValue).getId() == Util.loginUser.getId()) {
+                Util.loginUser = user;
+                Util.loginUser.setId(((User) getUserValue).getId());
+                newUsers.add(Util.loginUser);
+            } else {
+                newUsers.add(((User) getUserValue));
+            }
+        }
+        data.clearingFile(Util.projectDirectory());
+        for (User writeUser : newUsers) {
+            data.fileWriter(Util.projectDirectory(), writeUser);
+        }
+
+        return Util.loginUser;
     }
 
     @Override
@@ -34,7 +49,6 @@ public class UserRepository implements UserRepositoryInt {
 
     @Override
     public List<User> getUsers() throws InvalidArgumentException {
-        Data data = new UserData();
         List<Object> objects = data.fileReader(Util.projectDirectory());
         List<User> users = new ArrayList<>();
         for (Object o : objects) {
@@ -82,6 +96,8 @@ public class UserRepository implements UserRepositoryInt {
 
     @Override
     public void deleteFriend(int userId, int friendId) throws InvalidArgumentException {
+
+
         getFriends(Util.loginUser.getId());
     }
 

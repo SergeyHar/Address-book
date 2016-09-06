@@ -1,8 +1,11 @@
 package com.controller;
 
 public interface ControllerInt {
+    void start();
+    String inputCommand();
     void signIn();
     void signUp();
+    void editProfile();
     void addTel();
     void editTel();
     void showTel();
