@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhoneNumberData implements Data {
+public class PhoneNumberData implements Data<PhoneNumber> {
     private static final String COMMA_DELIMITER = ",";
     private static final String NEW_LINE_SEPARATOR = "\n";
     private static final String FILE_HEADER = "id,userId,type,number";
@@ -24,8 +24,9 @@ public class PhoneNumberData implements Data {
         return result;
     }
 
+
     @Override
-    public void fileWriter(String path, Object object) {
+    public void fileWriter(String path, PhoneNumber phoneNumber) {
         FileWriter fileWriter = null;
         BufferedReader fileReader;
 
@@ -37,13 +38,13 @@ public class PhoneNumberData implements Data {
                 fileWriter.append(FILE_HEADER);
                 fileWriter.append(NEW_LINE_SEPARATOR);
             }
-            fileWriter.append(String.valueOf(((PhoneNumber) object).getId()));
+            fileWriter.append(String.valueOf(phoneNumber.getId()));
             fileWriter.append(COMMA_DELIMITER);
             fileWriter.append(String.valueOf(Util.loginUser.getId()));
             fileWriter.append(COMMA_DELIMITER);
-            fileWriter.append(String.valueOf(((PhoneNumber) object).getType()));
+            fileWriter.append(String.valueOf(phoneNumber.getType()));
             fileWriter.append(COMMA_DELIMITER);
-            fileWriter.append(String.valueOf(((PhoneNumber) object).getNumber()));
+            fileWriter.append(String.valueOf(phoneNumber.getNumber()));
             fileWriter.append(NEW_LINE_SEPARATOR);
 
 
@@ -60,18 +61,18 @@ public class PhoneNumberData implements Data {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void removeFileArgument(String path, Object object) {
 
     }
 
     @Override
-    public List<Object> fileReader(String path) {
+    public void removeFileArgument(String path, PhoneNumber phoneNumber) {
 
+    }
+
+    @Override
+    public List<PhoneNumber> fileReader(String path) {
         BufferedReader fileReader;
-        List<Object> result = null;
+        List<PhoneNumber> result = null;
 
         try {
             final int PHONE_ID_IDX = 0;
@@ -79,7 +80,7 @@ public class PhoneNumberData implements Data {
             final int PHONE_TYPE_IDX = 2;
             final int PHONE_NUMBER_IDX = 3;
 
-            List<Object> numbers = new ArrayList<>();
+            List<PhoneNumber> numbers = new ArrayList<>();
 
             String line;
             // Create the file reader
@@ -111,7 +112,6 @@ public class PhoneNumberData implements Data {
             e.printStackTrace();
         }
         return result;
-
     }
 
 

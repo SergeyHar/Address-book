@@ -2,10 +2,10 @@ package com.data;
 
 import java.util.List;
 
-public interface Data {
-    void fileWriter(String path, Object object);
-    void removeFileArgument(String path, Object object);
-    List<Object> fileReader(String path);
+public interface Data<T> {
+    void fileWriter(String path, T t);
+    void removeFileArgument(String path, T t);
+    List<T> fileReader(String path);
     void clearingFile(String path);
 
 }

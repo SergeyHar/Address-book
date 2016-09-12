@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserData implements Data {
+public class UserData implements Data<User> {
     private static final String COMMA_DELIMITER = ",";
     private static final String NEW_LINE_SEPARATOR = "\n";
     private static final String FILE_HEADER = "id,name,password";
@@ -23,9 +23,9 @@ public class UserData implements Data {
         return result;
     }
 
-    @Override
-    public void fileWriter(String path, Object o) {
 
+    @Override
+    public void fileWriter(String path, User user) {
         FileWriter fileWriter = null;
         BufferedReader fileReader;
 
@@ -37,11 +37,11 @@ public class UserData implements Data {
                 fileWriter.append(FILE_HEADER);
                 fileWriter.append(NEW_LINE_SEPARATOR);
             }
-            fileWriter.append(String.valueOf(((User) o).getId()));
+            fileWriter.append(String.valueOf(user.getId()));
             fileWriter.append(COMMA_DELIMITER);
-            fileWriter.append(String.valueOf(((User) o).getName()));
+            fileWriter.append(String.valueOf(user.getName()));
             fileWriter.append(COMMA_DELIMITER);
-            fileWriter.append(String.valueOf(((User) o).getPassword()));
+            fileWriter.append(String.valueOf(user.getPassword()));
             fileWriter.append(NEW_LINE_SEPARATOR);
 
 
@@ -61,23 +61,21 @@ public class UserData implements Data {
     }
 
     @Override
-    public void removeFileArgument(String path, Object object) {
+    public void removeFileArgument(String path, User user) {
 
     }
 
-
     @Override
-    public List<Object> fileReader(String path) {
-
+    public List<User> fileReader(String path) {
         BufferedReader fileReader;
-        List<Object> result = null;
+        List<User> result = null;
 
         try {
             final int USER_ID_IDX = 0;
             final int USER_NAME_IDX = 1;
             final int USER_PASSWORD_IDX = 2;
 
-            List<Object> users = new ArrayList<>();
+            List<User> users = new ArrayList<>();
 
             String line;
             // Create the file reader
@@ -109,6 +107,7 @@ public class UserData implements Data {
         }
         return result;
     }
+
 
     @Override
     public void clearingFile(String path) {
