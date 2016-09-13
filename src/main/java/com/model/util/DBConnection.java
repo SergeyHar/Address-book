@@ -30,12 +30,14 @@ public class DBConnection {
 
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             statement = connection.createStatement();
-            System.out.println("exav");
+            System.out.println("connecting");
 
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
 
 }

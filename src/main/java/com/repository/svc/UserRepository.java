@@ -1,4 +1,4 @@
-package com.repository;
+package com.repository.svc;
 
 import com.data.Data;
 import com.data.FriendData;

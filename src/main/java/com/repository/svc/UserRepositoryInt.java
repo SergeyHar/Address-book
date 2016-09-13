@@ -1,4 +1,4 @@
-package com.repository;
+package com.repository.svc;
 
 import com.model.User;
 import com.model.util.InvalidArgumentException;

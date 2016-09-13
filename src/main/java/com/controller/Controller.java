@@ -6,11 +6,14 @@ import com.model.phonenumber.PhoneType;
 import com.model.util.InvalidArgumentException;
 import com.model.util.Util;
 import com.model.util.Validate;
-import com.repository.PhoneNumberRepository;
-import com.repository.PhoneNumberRepositoryInt;
-import com.repository.UserRepository;
-import com.repository.UserRepositoryInt;
+import com.repository.svc.PhoneNumberRepository;
+import com.repository.svc.PhoneNumberRepositoryInt;
+import com.repository.svc.UserRepository;
+import com.repository.svc.UserRepositoryInt;
+import com.repository.sql.interfaces.UserDbInt;
+import com.repository.sql.UsersDb;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Controller implements ControllerInt {
@@ -20,11 +23,12 @@ public class Controller implements ControllerInt {
     private UserRepositoryInt repository = new UserRepository();
     private PhoneNumberRepositoryInt phoneNumberRepository = new PhoneNumberRepository();
 
+    private UserDbInt userDb = UsersDb.getInstance();
+
     @Override
     public String inputCommand() {
         commandLine = scanner.nextLine();
         return commandLine;
-
     }
 
     @Override
@@ -124,14 +128,16 @@ public class Controller implements ControllerInt {
         User user = new User(name, pass);
 
         try {
-            repository.addUser(user);
+            userDb.addUser(user);
+//            repository.addUser(user);
         } catch (InvalidArgumentException e) {
             Util.printMessage(e);
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         Util.printMessage("Dear " + user.getName());
         Util.printMessage("You have successfully created user. Please write down one of this commands \"Sign In\" or \"Sign Up\"");
-
     }
 
     public void signIn() {
@@ -148,10 +154,13 @@ public class Controller implements ControllerInt {
             user.setName(name);
             user.setPassword(pass);
             try {
-                Util.loginUser = repository.existingUserCheckup(user);
+                Util.loginUser = userDb.getUser(user.getName());
+//                Util.loginUser = repository.existingUserCheckup(user);
             } catch (InvalidArgumentException invalidArgumentException) {
                 Util.printMessage(invalidArgumentException);
                 signIn();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         } else {
             Util.printMessage("Please correct login and password");
@@ -164,39 +173,47 @@ public class Controller implements ControllerInt {
         String friendName;
         Util.printMessage("Please provide your friend username");
         friendName = inputCommand();
-        User user = null;
-        boolean flag = false;
+//        User user = null;
+//        boolean flag = false;
         try {
-            for (User user1 : repository.getUsers()) {
-                if (user1.getName().equals(friendName)) {
-                    Util.printMessage(user1.getName() + "  " + user1.getId());
-                    user = user1;
-                    flag = true;
-                }
-            }
-            if (flag) {
-                repository.addFriend(Util.loginUser.getId(), user.getId());
-                Util.printMessage(Util.loginUser.getId() + "");
-                Util.printMessage(user.getName() + " " + user.getId());
-                Util.printMessage("Thank you. Now " + friendName + " can has access to your address book");
-            } else {
-                throw new InvalidArgumentException("Please correct your friend name");
-            }
+            User user = userDb.getUser(friendName);
+            userDb.addFriend(Util.loginUser.getId(), user.getId());
+
+//            for (User user1 : repository.getUsers()) {
+//                if (user1.getName().equals(friendName)) {
+//                    Util.printMessage(user1.getName() + "  " + user1.getId());
+//                    user = user1;
+//                    flag = true;
+//                }
+//            }
+//            if (flag) {
+//                repository.addFriend(Util.loginUser.getId(), user.getId());
+//                Util.printMessage(Util.loginUser.getId() + "");
+//                Util.printMessage(user.getName() + " " + user.getId());
+//                Util.printMessage("Thank you. Now " + friendName + " can has access to your address book");
+//            } else {
+//                throw new InvalidArgumentException("Please correct your friend name");
+//            }
 
         } catch (InvalidArgumentException invalidArgumentException) {
             Util.printMessage(invalidArgumentException);
             addFriend();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     public void showFriends() {
         try {
             Util.printMessage("Friends  ");
-            for (User user : repository.getFriends(Util.loginUser.getId())) {
+//            for (User user : repository.getFriends(Util.loginUser.getId())) {
+            for (User user : userDb.getFriends(Util.loginUser.getId())) {
                 Util.printMessage(", " + user.getName());
             }
 
         } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -205,11 +222,13 @@ public class Controller implements ControllerInt {
     public void deleteFriend() {
         Util.printMessage("Write friend name if you wont delete");
         String deleteFriend = inputCommand();
-        //anavart
-        int deleteFriendId = 0;
         try {
-            repository.deleteFriend(Util.loginUser.getId(), deleteFriendId);
+            User friend = userDb.getUser(deleteFriend);
+            userDb.deleteFriend(Util.loginUser.getId(), friend.getId());
+//            repository.deleteFriend(Util.loginUser.getId(), deleteFriendId);
         } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 

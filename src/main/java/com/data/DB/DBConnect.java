@@ -7,7 +7,7 @@ public class DBConnect {
 
     private Connection conn;
     private Statement st;
-    private ResultSet rs;
+//    private ResultSet rs;
 
     public DBConnect() {
         try {
@@ -22,21 +22,6 @@ public class DBConnect {
             System.out.println("VendorError: " + ex.getErrorCode());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void getData() {
-        try {
-            String query = "SELECT * FROM USER";
-            rs =st.executeQuery(query);
-            System.out.println("Records from DB");
-            while (rs.next()){
-                String name = rs.getString("name");
-                String pass= rs.getString("password");
-                System.out.println(name +"  "+pass);
-            }
-        } catch (Exception ex) {
-            System.out.println(ex);
         }
     }
 

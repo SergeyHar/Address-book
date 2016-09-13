@@ -1,4 +1,4 @@
-package com.repository;
+package com.repository.svc;
 
 import com.model.phonenumber.PhoneNumber;
 import com.model.util.InvalidArgumentException;
