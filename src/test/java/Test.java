@@ -1,3 +1,5 @@
+package test.java;
+
 import com.repository.sql.implementation.UserDbQuery;
 import com.repository.sql.UsersDb;
 

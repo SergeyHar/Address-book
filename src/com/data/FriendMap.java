@@ -2,9 +2,6 @@ package com.data;
 
 import com.model.User;
 
-/**
- * Created by Sergo on 10-Sep-16.
- */
 public class FriendMap extends User {
     private int id;
     private int value;
