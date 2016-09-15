@@ -1,7 +1,7 @@
 package com.repository.svc;
 
-import com.data.Data;
-import com.data.PhoneNumberData;
+import com.repository.svc.data.Data;
+import com.repository.svc.data.PhoneNumberData;
 import com.model.phonenumber.PhoneNumber;
 import com.model.util.InvalidArgumentException;
 import com.model.util.Util;

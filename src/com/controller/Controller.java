@@ -4,26 +4,24 @@ import com.model.User;
 import com.model.phonenumber.PhoneNumber;
 import com.model.phonenumber.PhoneType;
 import com.model.util.InvalidArgumentException;
+import com.model.util.PropertiesMessage;
 import com.model.util.Util;
 import com.model.util.Validate;
-import com.repository.svc.PhoneNumberRepository;
-import com.repository.svc.PhoneNumberRepositoryInt;
-import com.repository.svc.UserRepository;
-import com.repository.svc.UserRepositoryInt;
-import com.repository.sql.interfaces.UserDbInt;
+import com.repository.sql.PhoneNumbersDb;
 import com.repository.sql.UsersDb;
+import com.repository.sql.interfaces.UserRepositorySqlInt;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Controller implements ControllerInt {
     private Scanner scanner = new Scanner(System.in);
     private String commandLine;
 
-    private UserRepositoryInt repository = new UserRepository();
-    private PhoneNumberRepositoryInt phoneNumberRepository = new PhoneNumberRepository();
-
-    private UserDbInt userDb = UsersDb.getInstance();
+    private PropertiesMessage message = new PropertiesMessage();
+    private UserRepositorySqlInt userDb = UsersDb.getInstance();
+    private PhoneNumbersDb numbersDb = PhoneNumbersDb.getInstance();
 
     @Override
     public String inputCommand() {
@@ -48,6 +46,11 @@ public class Controller implements ControllerInt {
             case "Sign In":
                 signIn();
                 Util.printMessage("Now you can write down one of this commands \"Add Tel. Numb\" or \"Show Tel. Numbers\"");
+                start();
+                break;
+            case "Delete profile":
+                deleteProfile();
+                Util.printMessage("Please write new command");
                 start();
                 break;
             case "Edit profile":
@@ -105,31 +108,53 @@ public class Controller implements ControllerInt {
         String name;
         String password;
         User user = new User();
-        Util.printMessage("Input new name");
+        Util.printMessage(message.getMessage("inputNewName"));
         name = inputCommand();
-        Util.printMessage("Input new password");
+        Util.printMessage(message.getMessage("inputNewPassword"));
         password = inputCommand();
         user.setName(name);
         user.setPassword(password);
         try {
-            repository.editUser(user);
+            Util.loginUser = userDb.editUser(Util.loginUser, user);
         } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
+    @Override
+    public void deleteProfile() {
+        String name;
+        String password;
+        User user = new User();
+        Util.printMessage(message.getMessage("inputNewName"));
+        name = inputCommand();
+        Util.printMessage(message.getMessage("inputNewPassword"));
+        password = inputCommand();
+        user.setName(name);
+        user.setPassword(password);
+        try {
+            userDb.deleteUser(userDb.getUser(name, password).getId());
+        } catch (SQLException e) {
+            Util.printMessage(message.getMessage("inputValueBroken"));
+            e.printStackTrace();
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void signUp() {
-        Util.printMessage("Please provide your username:");
+        Util.printMessage(message.getMessage("inputName"));
         String name = Validate.notNull(inputCommand());
-        Util.printMessage("Please provide your password:");
+        Util.printMessage(message.getMessage("inputPassword"));
         String pass = Validate.notNull(inputCommand());
 
         User user = new User(name, pass);
 
         try {
             userDb.addUser(user);
-//            repository.addUser(user);
         } catch (InvalidArgumentException e) {
             Util.printMessage(e);
             e.printStackTrace();
@@ -137,16 +162,15 @@ public class Controller implements ControllerInt {
             e.printStackTrace();
         }
         Util.printMessage("Dear " + user.getName());
-        Util.printMessage("You have successfully created user. Please write down one of this commands \"Sign In\" or \"Sign Up\"");
+        Util.printMessage(message.getMessage("createdUser"));
     }
 
     public void signIn() {
-        String name;
-        String pass;
-        Util.printMessage("Please write login");
-        name = inputCommand();
-        Util.printMessage("Please write password");
-        pass = inputCommand();
+        Util.printMessage(message.getMessage("inputName"));
+        String name = inputCommand();
+        Util.printMessage(message.getMessage("inputPassword"));
+        String pass = inputCommand();
+
         if (name.equals("Exit") || pass.equals("Exit")) {
             exit();
         } else if (!name.equals("") && !pass.equals("")) {
@@ -155,7 +179,6 @@ public class Controller implements ControllerInt {
             user.setPassword(pass);
             try {
                 Util.loginUser = userDb.getUser(user.getName());
-//                Util.loginUser = repository.existingUserCheckup(user);
             } catch (InvalidArgumentException invalidArgumentException) {
                 Util.printMessage(invalidArgumentException);
                 signIn();
@@ -163,7 +186,7 @@ public class Controller implements ControllerInt {
                 e.printStackTrace();
             }
         } else {
-            Util.printMessage("Please correct login and password");
+            Util.printMessage(message.getMessage("inputValueBroken"));
             signIn();
         }
 
@@ -171,29 +194,11 @@ public class Controller implements ControllerInt {
 
     public void addFriend() {
         String friendName;
-        Util.printMessage("Please provide your friend username");
+        Util.printMessage(message.getMessage("inputFriendName"));
         friendName = inputCommand();
-//        User user = null;
-//        boolean flag = false;
         try {
             User user = userDb.getUser(friendName);
             userDb.addFriend(Util.loginUser.getId(), user.getId());
-
-//            for (User user1 : repository.getUsers()) {
-//                if (user1.getName().equals(friendName)) {
-//                    Util.printMessage(user1.getName() + "  " + user1.getId());
-//                    user = user1;
-//                    flag = true;
-//                }
-//            }
-//            if (flag) {
-//                repository.addFriend(Util.loginUser.getId(), user.getId());
-//                Util.printMessage(Util.loginUser.getId() + "");
-//                Util.printMessage(user.getName() + " " + user.getId());
-//                Util.printMessage("Thank you. Now " + friendName + " can has access to your address book");
-//            } else {
-//                throw new InvalidArgumentException("Please correct your friend name");
-//            }
 
         } catch (InvalidArgumentException invalidArgumentException) {
             Util.printMessage(invalidArgumentException);
@@ -205,27 +210,23 @@ public class Controller implements ControllerInt {
 
     public void showFriends() {
         try {
-            Util.printMessage("Friends  ");
-//            for (User user : repository.getFriends(Util.loginUser.getId())) {
+            Util.printMessage(message.getMessage("friends"));
             for (User user : userDb.getFriends(Util.loginUser.getId())) {
                 Util.printMessage(", " + user.getName());
             }
-
         } catch (InvalidArgumentException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public void deleteFriend() {
-        Util.printMessage("Write friend name if you wont delete");
+        Util.printMessage(message.getMessage("deleteFriend"));
         String deleteFriend = inputCommand();
         try {
             User friend = userDb.getUser(deleteFriend);
             userDb.deleteFriend(Util.loginUser.getId(), friend.getId());
-//            repository.deleteFriend(Util.loginUser.getId(), deleteFriendId);
         } catch (InvalidArgumentException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -236,50 +237,80 @@ public class Controller implements ControllerInt {
 
     public void addTel() {
         PhoneType phoneType;
-        int number;
-        Util.printMessage("Please write phone type \"1\"=MOBILE, \"2\"=HOME, \"3\"=WORK");
-        phoneType = Util.checkType(Integer.parseInt(inputCommand()));
-        Util.printMessage("Please write number");
+        String number;
+        Util.printMessage(message.getMessage("inputPhoneType"));
+        phoneType = Util.checkType(inputCommand());
+        Util.printMessage(message.getMessage("inputNumber"));
+        number = inputCommand();
 
         try {
-            number = Integer.parseInt(inputCommand());
             PhoneNumber phoneNumber = new PhoneNumber(Util.loginUser.getId(), phoneType, number);
-            phoneNumberRepository.addNumber(Util.loginUser.getId(), phoneNumber);
+            numbersDb.addPhoneNumber(Util.loginUser.getId(), phoneNumber);
+        } catch (SQLException e) {
+            e.printStackTrace();
         } catch (InvalidArgumentException e) {
             Util.printMessage(e);
         } catch (NumberFormatException nE) {
             Util.printMessage(String.valueOf(nE));
             addTel();
         }
-
     }
 
     @Override
     public void editTel() {
-        //edit
+        PhoneType phoneType;
+        String number;
+
+        Util.printMessage(message.getMessage("inputPhoneType"));
+        phoneType = Util.checkType(inputCommand());
+        Util.printMessage(message.getMessage("inputNumber"));
+        number = inputCommand();
+
+        PhoneNumber phoneNumber = new PhoneNumber(phoneType, number);
+
+        Util.printMessage(message.getMessage("inputNewPhoneType"));
+        phoneType = Util.checkType(inputCommand());
+        Util.printMessage(message.getMessage("inputNewNumber"));
+        number = inputCommand();
+
+        PhoneNumber newPhoneNumber = new PhoneNumber(phoneType, number);
+
+        try {
+            numbersDb.editPhoneNumber(Util.loginUser.getId(), phoneNumber, newPhoneNumber);
+
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showTel() {
         try {
-            for (PhoneNumber phoneNumber : phoneNumberRepository.getNumbers(Util.loginUser.getId())) {
-                for (User friend : repository.getFriends(Util.loginUser.getId())) {
-                    if (phoneNumber.getUserId() == Util.loginUser.getId() || friend.getId() == phoneNumber.getUserId()) {
-                        Util.printMessage(phoneNumber.toString());
-                    }
-                }
+            List<PhoneNumber> phoneNumbers = numbersDb.getPhoneNumbers(Util.loginUser.getId());
+
+/*            //old version
+            for (PhoneNumber phoneNumber : phoneNumbers) {
+                Util.printMessage(phoneNumber.toString());
             }
+*/
+//            lambda expression
+            phoneNumbers.forEach(phoneNumber -> Util.printMessage(phoneNumber.toString()));
+
         } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void help() {
-        Util.printMessage("\"Sign In\", \"Sign Up\", \"Edit profile\", \"Add Tel. Numb\", \"Show Tel. Numbers\", \"Add Friend\", \"Exit\"");
+        Util.printMessage(message.getMessage("help"));
     }
 
     @Override
     public void exit() {
-        Util.printMessage("Good bye");
+        Util.printMessage(message.getMessage("exit"));
         System.exit(0);
     }
 }

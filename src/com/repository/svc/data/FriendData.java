@@ -1,4 +1,4 @@
-package com.data;
+package com.repository.svc.data;
 
 import com.model.User;
 import com.model.util.Util;

@@ -1,8 +1,8 @@
 package com.repository.svc;
 
-import com.data.Data;
-import com.data.FriendData;
-import com.data.UserData;
+import com.repository.svc.data.Data;
+import com.repository.svc.data.FriendData;
+import com.repository.svc.data.UserData;
 import com.model.User;
 import com.model.util.InvalidArgumentException;
 import com.model.util.Util;

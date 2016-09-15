@@ -1,4 +1,4 @@
-package com.data;
+package com.repository.svc.data;
 
 import java.util.List;
 

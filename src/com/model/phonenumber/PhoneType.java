@@ -1,17 +1,17 @@
 package com.model.phonenumber;
 
 public enum PhoneType {
-	MOBILE(1), 
-	HOME(2),
-	WORK(3)	;
-	int id;
+    MOBILE("mobile"),
+    HOME("home"),
+    WORK("work");
+    String type;
 
-	PhoneType(int id) {
-		this.id = id;
-	}
+    PhoneType(String type) {
+        this.type = type;
+    }
 
-	int getID() {
-		return this.id;
-	}
+    public String getType() {
+        return type;
+    }
 
 }

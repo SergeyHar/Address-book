@@ -8,8 +8,6 @@ import java.io.File;
 public class Util {
     public static User loginUser = null;
     public static String path = "";
-    public static int userNextId = 0;
-    public static int phoneNumberNextId = 0;
 
     public static String projectDirectory() {
         File file = new File(path);
@@ -25,13 +23,13 @@ public class Util {
         System.out.println(invArgExcepMessage);
     }
 
-    public static PhoneType checkType(int type) {
+    public static PhoneType checkType(String type) {
         PhoneType result;
         switch (type) {
-            case 2:
+            case "home":
                 result = PhoneType.HOME;
                 break;
-            case 3:
+            case "work":
                 result = PhoneType.WORK;
                 break;
             default:

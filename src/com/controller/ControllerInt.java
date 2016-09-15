@@ -6,6 +6,7 @@ public interface ControllerInt {
     void signIn();
     void signUp();
     void editProfile();
+    void deleteProfile();
     void addTel();
     void editTel();
     void showTel();

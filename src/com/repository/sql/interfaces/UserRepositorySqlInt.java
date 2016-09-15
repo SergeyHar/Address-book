@@ -6,7 +6,7 @@ import com.model.util.InvalidArgumentException;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface UserDbInt {
+public interface UserRepositorySqlInt {
     User addUser(User user) throws InvalidArgumentException, SQLException;
 
     User editUser(User user , User newUser ) throws InvalidArgumentException, SQLException;
@@ -16,6 +16,8 @@ public interface UserDbInt {
     User getUser(int userId) throws InvalidArgumentException, SQLException;
 
     User getUser(String userName) throws InvalidArgumentException, SQLException;
+
+    User getUser(String userName, String password) throws InvalidArgumentException, SQLException;
 
     List<User> getUsers() throws InvalidArgumentException, SQLException;
 

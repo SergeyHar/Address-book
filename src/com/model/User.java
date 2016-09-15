@@ -9,9 +9,22 @@ import java.util.List;
 public class User {
     private String name;
     private String password;
-    private int id = 0;
+    private int id;
     private List<PhoneNumber> phonePhoneNumber;
     private List<User> friend;
+    public User() {
+
+    }
+
+    public User(String noMd5Password) {
+        this.password = noMd5Password;
+    }
+
+    public User(String name, String password) {
+        super();
+        this.name = name;
+        this.password = Validate.md5(password);
+    }
 
     public String getName() {
         return name;
@@ -26,7 +39,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = Validate.md5(password);
+        this.password = password;
     }
 
     public void setId(int id) {
@@ -36,7 +49,6 @@ public class User {
     public int getId() {
         return id;
     }
-
 
     public List<PhoneNumber> getPhonePhoneNumber() {
         return phonePhoneNumber;
@@ -54,21 +66,7 @@ public class User {
         this.friend = friend;
     }
 
-    public User() {
 
-    }
-
-    public User(String noMd5Password) {
-        this.password = noMd5Password;
-    }
-
-    public User(String name, String password) {
-        super();
-        this.name = name;
-        this.password = Validate.md5(password);
-        this.id = ++Util.userNextId;
-
-    }
 
     @Override
     public int hashCode() {

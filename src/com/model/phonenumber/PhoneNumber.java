@@ -6,7 +6,7 @@ public class PhoneNumber {
     private int id;
     private int userId;
     private PhoneType type;
-    private int number;
+    private String number;
 
     public int getId() {
         return id;
@@ -32,19 +32,23 @@ public class PhoneNumber {
         this.type = type;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
     public PhoneNumber() {
     }
 
-    public PhoneNumber(int userId, PhoneType type, int number) {
-        this.id = ++Util.phoneNumberNextId;
+    public PhoneNumber(PhoneType type, String number) {
+        this.type = type;
+        this.number = number;
+    }
+
+    public PhoneNumber(int userId, PhoneType type, String number) {
         this.userId = userId;
         this.type = type;
         this.number = number;
@@ -52,11 +56,13 @@ public class PhoneNumber {
 
     @Override
     public String toString() {
-        return "PhoneNumber{" +
+        return "PhoneNumber {" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", type=" + type +
                 ", number=" + number +
                 '}';
     }
+
+
 }

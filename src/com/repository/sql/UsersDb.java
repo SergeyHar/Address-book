@@ -2,25 +2,28 @@ package com.repository.sql;
 
 import com.model.User;
 import com.model.util.InvalidArgumentException;
+import com.model.util.PropertiesMessage;
 import com.model.util.Util;
 import com.repository.sql.implementation.UserDbQuery;
-import com.repository.sql.interfaces.UserDbInt;
+import com.repository.sql.interfaces.UserRepositorySqlInt;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
-public class UsersDb implements UserDbInt {
-
+public class UsersDb implements UserRepositorySqlInt {
     private static UsersDb usersDb;
-    private final String TABLE_USERS = "users";
-    private final String TABLE_FRIENDS = "friends";
 
-    private final String COLUMNS_USERS_ID = "id";
-    private final String COLUMNS_USERS_NAME = "name";
-    private final String COLUMNS_USERS_PASSWORD = "password";
+    private PropertiesMessage properties = new PropertiesMessage();
 
-    private final String COLUMNS_FRIENDS_USER_ID = "user_id";
-    private final String COLUMNS_FRIENDS_FRIEND_ID = "friend_id";
+    private final String TABLE_USERS = properties.getDbMessage("tbUser");
+    private final String COLUMNS_USERS_ID = properties.getDbMessage("userId");
+    private final String COLUMNS_USERS_NAME = properties.getDbMessage("userName");
+    private final String COLUMNS_USERS_PASSWORD = properties.getDbMessage("userPassword");
+
+    private final String TABLE_FRIENDS = properties.getDbMessage("tbFriends");
+    private final String COLUMNS_FRIENDS_USER_ID = properties.getDbMessage("friendUserId");
+    private final String COLUMNS_FRIENDS_FRIEND_ID = properties.getDbMessage("friendId");
 
     private UsersDb() {
 
@@ -79,10 +82,23 @@ public class UsersDb implements UserDbInt {
     public User getUser(String userName) throws InvalidArgumentException, SQLException {
         User result = new User();
         UserDbQuery db = UserDbQuery.getInstance();
-
         try {
             List<User> users = db.select("SELECT * FROM " + TABLE_USERS + " WHERE  " + COLUMNS_USERS_NAME + "='" + userName + "'");
+            if (users.get(0) != null) {
+                result = users.get(0);
+            }
+        } catch (SQLException e) {
+            Util.printMessage(e.getSQLState());
+        }
+        return result;
+    }
 
+    @Override
+    public User getUser(String userName, String password) throws InvalidArgumentException, SQLException {
+        User result = new User();
+        UserDbQuery db = UserDbQuery.getInstance();
+        try {
+            List<User> users = db.select("SELECT * FROM " + TABLE_USERS + " WHERE  " + COLUMNS_USERS_NAME + "=`" + userName + "` AND "+COLUMNS_USERS_PASSWORD+" = `"+password+"`");
             if (users.get(0) != null) {
                 result = users.get(0);
             }
@@ -102,7 +118,7 @@ public class UsersDb implements UserDbInt {
     @Override
     public User addFriend(int userId, int setUserId) throws InvalidArgumentException, SQLException {
 
-        UserDbInt userDb = new UsersDb();
+        UserRepositorySqlInt userDb = new UsersDb();
         UserDbQuery db = UserDbQuery.getInstance();
 
         db.insert("INSERT INTO " + TABLE_FRIENDS + " (" + COLUMNS_FRIENDS_USER_ID + ", " + COLUMNS_FRIENDS_FRIEND_ID + ") VALUES ('" + userId + "', '" + setUserId + "')");
@@ -134,7 +150,6 @@ public class UsersDb implements UserDbInt {
 
             if (users.get(0) != null) {
 
-//                System.out.println(users.get(0).getName() + " done");
                 return true;
             }
         } catch (SQLException e) {

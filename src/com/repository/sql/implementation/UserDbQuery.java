@@ -1,21 +1,19 @@
 package com.repository.sql.implementation;
 
 import com.model.User;
-import com.model.util.DBConnection;
+import com.model.util.PropertiesMessage;
 import com.model.util.Util;
-import com.repository.sql.interfaces.DataSql;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 
-public class UserDbQuery implements DataSql<User> {
+public class UserDbQuery extends DbQuery<User> {
 
     private static UserDbQuery dbRepository;
-    private DBConnection connection = new DBConnection();
+    PropertiesMessage properties = new PropertiesMessage();
 
     private UserDbQuery() {
     }
@@ -27,34 +25,19 @@ public class UserDbQuery implements DataSql<User> {
     }
 
     @Override
-    public void insert(String query) throws SQLException {
-        connection.getConnection();
-
-        try (Statement stmt = connection.getStatement()) {
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
     public List<User> select(String query) throws SQLException {
         List<User> result = new ArrayList<>();
-        try (Statement stmt = connection.getStatement()) {
-            ResultSet rs = stmt.executeQuery(query);
+        try  (Connection connection = DriverManager.getConnection(PropertiesMessage.getDbMessage("dataBaseUrl"), PropertiesMessage.getDbMessage("dataBaseLogIn"), PropertiesMessage.getDbMessage("dataBasePassword"));
+              Statement statement = connection.createStatement();
+              ResultSet resultSet = statement.executeQuery(query)){
 
-            while (rs.next()) {
+            while (resultSet.next()) {
                 User user = new User();
 
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                String pass = rs.getString("password");
-//                int sales = rs.getInt("SALES");
-//                int total = rs.getInt("TOTAL");
+                int id = resultSet.getInt(properties.getDbMessage("userId"));
+                String name = resultSet.getString(properties.getDbMessage("userName"));
+                String pass = resultSet.getString(properties.getDbMessage("userPassword"));
 
-//                result=id + ", " + name + ", " + pass;
-//                System.out.println(id + ", " + name + ", " + pass);
                 user.setId(id);
                 user.setName(name);
                 user.setPassword(pass);
@@ -63,34 +46,7 @@ public class UserDbQuery implements DataSql<User> {
         } catch (SQLException e) {
             Util.printMessage(e.getSQLState());
         }
-
         return result;
-    }
-
-    @Override
-    public void update(String query) throws SQLException {
-        connection.getStatement();
-
-        try (Statement st = connection.getStatement()) {
-            st.executeUpdate(query);
-        } catch (SQLException e) {
-            Util.printMessage(e.getSQLState());
-        }
-
-//
-
-    }
-
-    @Override
-    public void delete(String query) throws SQLException {
-        connection.getConnection();
-
-        try (Statement stmt = connection.getStatement()) {
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
     }
 
 }
